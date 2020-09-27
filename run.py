@@ -4,10 +4,10 @@ import os
 import requests
 
 INPUTFOLDER="/data/feedback"
-CORPWEBIP="x.x.x.x"
+CORPWEBIP="xx.xx.xx.xx"
 
 
-url = "http://{}/feedback".format(CORPWEBIP)
+url = "http://{}/feedback/".format(CORPWEBIP)
 
 #search text file in the folder
 for textfile in os.listdir(INPUTFOLDER):
@@ -18,10 +18,10 @@ for textfile in os.listdir(INPUTFOLDER):
     #operate each file
     with open(textfilepath, "r") as f:
         #read text file
-        title = f.readline()
-        name = f.readline()
-        date = f.readline()
-        feedback = f.read()
+        title = f.readline().rstrip()
+        name = f.readline().rstrip()
+        date = f.readline().rstrip()
+        feedback = f.read().rstrip()
 
         #create request data
         data = {
@@ -30,14 +30,15 @@ for textfile in os.listdir(INPUTFOLDER):
             ,"date":date
             ,"feedback":feedback
         }
-
+        print(textfilepath)
+        print(data)
         #throw request
         response = requests.post(url,json=data)
 
         #analyze response
         print("--response--")
         print("text: {} \nstatus_code: {} \ntext(response): {}".format(
-            textfile, response.status_code, response.text))
+            textfile, response.status_code, response.text[:]))
 
-
+        
 
